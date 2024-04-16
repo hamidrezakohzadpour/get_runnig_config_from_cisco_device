@@ -10,8 +10,6 @@ def str_date_time():
     str_date = now.strftime("%Y%m%d")
     str_time = now.strftime("%H%M%S")
     return "_" + str_date + "_" + str_time
-
-
 if not os.path.exists("configs"):
     os.mkdir("configs")
 if not os.path.exists("configs\\device_ip.txt"):
@@ -19,11 +17,9 @@ if not os.path.exists("configs\\device_ip.txt"):
     print (Fore.RED + "Please add IP Addresses to configs\\device_ip.txt" + Fore.WHITE)
     file.close()
     exit()
-    
 with open ("configs\\device_ip.txt",'r') as f:
     devices_list = f.read().splitlines()
     f.close()
-
 for ip_address in devices_list:
     Switch = { 
             "hostname": ip_address,
