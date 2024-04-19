@@ -10,14 +10,31 @@ def str_date_time():
     str_date = now.strftime("%Y%m%d")
     str_time = now.strftime("%H%M%S")
     return "_" + str_date + "_" + str_time
-if not os.path.exists("configs"):
-    os.mkdir("configs")
-if not os.path.exists("configs\\device_ip.txt"):
-    file = open("configs\\device_ip.txt", 'w')
+
+def input_file_address():
+    OSNAME = (os.name)
+    if OSNAME == "nt":
+        return 'configs\\device_ip.txt'
+    elif OSNAME == "posix":
+        return 'configs/device_ip.txt'
+
+def output_file_address():
+    OSNAME = (os.name)
+    if OSNAME == "nt":
+        return 'configs\\' + Switch['hostname'] + "_" + str_date_time() + "_cfg.txt"
+    elif OSNAME == "posix":
+        return 'configs/' + Switch['hostname'] + "_" + str_date_time() + "_cfg.txt"
+    
+
+
+if not os.path.exists(input_file_address()):
+    os.mkdir('configs')
+    file = open(input_file_address(), 'w')
     print (Fore.RED + "Please add IP Addresses to configs\\device_ip.txt" + Fore.WHITE)
     file.close()
     exit()
-with open ("configs\\device_ip.txt",'r') as f:
+
+with open (input_file_address(),'r') as f:
     devices_list = f.read().splitlines()
     f.close()
 for ip_address in devices_list:
@@ -39,8 +56,7 @@ for ip_address in devices_list:
     except:
         print(Fore.RED + f"Unknown Err!. {Switch['hostname']}" + Fore.WHITE)
     else:
-        output_file_name = "configs\\" + Switch['hostname'] + "_" + str_date_time() + "_cfg.txt"
-        with open ( output_file_name, 'w') as f:
+        with open (output_file_address(), 'w') as f:
             print (Fore.GREEN + "Connected....")
             print(Switch_Driver.get_config()['running'], file=f)
             print(Fore.GREEN + "Pass...." + Fore.WHITE)
